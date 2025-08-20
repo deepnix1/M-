@@ -71,7 +71,7 @@ export default function Contact() {
                     </div>
                     <div className="flex items-center">
                       <Phone className="w-5 text-gray-500 mr-3" size={16} />
-                      <span className="text-gray-600">+90 532 xxx xx xx</span>
+                      <span className="text-gray-600">+90 538 395 88 77</span>
                     </div>
                   </div>
                 </div>
@@ -85,7 +85,7 @@ export default function Contact() {
                     </div>
                     <div className="flex items-center">
                       <Phone className="w-5 text-gray-500 mr-3" size={16} />
-                      <span className="text-gray-600">+90 533 xxx xx xx</span>
+                      <span className="text-gray-600">+90 536 656 02 90</span>
                     </div>
                   </div>
                 </div>
