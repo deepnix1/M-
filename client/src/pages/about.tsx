@@ -1,4 +1,5 @@
 import couplePhoto from "@assets/WhatsApp Görsel 2025-08-20 saat 22.04.32_c77cff25_1755718163232.jpg";
+import proposalPhoto from "@assets/WhatsApp Görsel 2025-08-20 saat 22.04.32_ed98056f_1755718425653.jpg";
 
 export default function About() {
   return (
@@ -39,8 +40,8 @@ export default function About() {
           <div>
             <h3 className="font-serif text-2xl font-semibold mb-4">Evlilik Teklifi</h3>
             <p className="text-gray-600 leading-relaxed mb-6">
-              Geçtiğimiz sonbaharda, her zamanki gibi sahil kenarında yürüyüş yaparken, 
-              Çağatay dizlerinin üstüne çöktü ve hayatımın en güzel sorusunu sordu. 
+              2 yıl önce Çağatay beni Mersin'e götüreceğini söyledi. Güzel bir yaz akşamında sahilde ve teknede 
+              özenle hazırlanmış bir evlilik teklifi yaptı ve hayatımın en güzel sorusunu sordu. 
               Tabii ki cevabımız "EVET!" oldu. O an, zamanın durduğunu hissettik.
             </p>
             
@@ -53,7 +54,7 @@ export default function About() {
           </div>
           
           <img
-            src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
+            src={proposalPhoto}
             alt="Evlilik teklifi kutlaması"
             className="w-full h-80 object-cover rounded-lg shadow-md"
           />
