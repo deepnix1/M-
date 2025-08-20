@@ -126,25 +126,20 @@ export default function Photos() {
               <div>
                 <Input
                   type="text"
-                  {...register("guestName", { required: "İsminiz zorunludur" })}
+                  id="guestName"
+                  name="guestName"
+                  {...register("guestName")}
                   placeholder="İsminiz"
                   className="mb-3"
+                  required
                   data-testid="input-guest-name"
                 />
-                {errors.guestName && (
-                  <p className="text-red-500 text-sm">{errors.guestName.message}</p>
-                )}
               </div>
-              
-              {/* Debug: Show all form errors */}
-              {Object.keys(errors).length > 0 && (
-                <div className="text-red-500 text-xs">
-                  Form hataları: {JSON.stringify(errors)}
-                </div>
-              )}
               
               <div>
                 <Textarea
+                  id="description" 
+                  name="description"
                   {...register("description")}
                   rows={2}
                   placeholder="Açıklama (opsiyonel)"
@@ -159,6 +154,9 @@ export default function Photos() {
                   disabled={!selectedFile || createPhotoMutation.isPending}
                   className="flex-1 bg-gray-800 text-white hover:bg-gray-700"
                   data-testid="button-submit-photo"
+                  onClick={(e) => {
+                    console.log('Submit button clicked', e);
+                  }}
                 >
                   {createPhotoMutation.isPending ? (
                     <>
