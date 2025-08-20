@@ -21,7 +21,7 @@ export default function Home() {
         {/* Hero Image */}
         <div className="relative max-w-4xl mx-auto mb-16">
           <img
-            src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800"
+            src="/attached_assets/IMG_7300_1755716799100.jpg"
             alt="Mihbiran ve Çağatay çift portresi"
             className="w-full h-96 md:h-[500px] object-cover rounded-lg shadow-lg"
           />
