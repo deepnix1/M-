@@ -24,13 +24,10 @@ export default function Photos() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<PhotoFormData>({
-    resolver: zodResolver(insertPhotoSchema),
+  } = useForm({
     defaultValues: {
-      filename: "",
-      imageData: "",
-      description: "",
       guestName: "",
+      description: "",
     },
   });
 
@@ -61,22 +58,23 @@ export default function Photos() {
     },
   });
 
-  const onSubmit = (data: PhotoFormData) => {
+  const onSubmit = (data: any) => {
     console.log('Form submitted', data, selectedFile);
-    if (selectedFile) {
+    if (selectedFile && data.guestName) {
       const reader = new FileReader();
       reader.onload = () => {
         const imageData = reader.result as string;
         console.log('Image data ready, submitting...');
         createPhotoMutation.mutate({
-          ...data,
           filename: selectedFile.name,
           imageData: imageData,
+          guestName: data.guestName,
+          description: data.description || "",
         });
       };
       reader.readAsDataURL(selectedFile);
     } else {
-      console.log('No file selected');
+      console.log('Missing file or name', { selectedFile, guestName: data.guestName });
     }
   };
 
