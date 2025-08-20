@@ -15,7 +15,7 @@ export default function Home() {
           </p>
           <div className="mt-8 text-lg text-gray-500 flex items-center justify-center">
             <Calendar className="mr-2" size={20} />
-            <span>15 Haziran 2024</span>
+            <span>23 Ağustos 2025</span>
           </div>
         </div>
 

@@ -25,7 +25,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-1">Tarih ve Saat</h4>
-                    <p className="text-gray-600">15 Haziran 2024, Cumartesi - 19:00</p>
+                    <p className="text-gray-600">23 Ağustos 2025, Cumartesi - 19:00</p>
                   </div>
                 </div>
                 
