@@ -66,7 +66,7 @@ export default function Contact() {
                   <div className="space-y-2">
                     <div className="flex items-center">
                       <User className="w-5 text-gray-500 mr-3" size={16} />
-                      <span className="text-gray-600">Mihbiran Kaya</span>
+                      <span className="text-gray-600">Mihriban Kaya</span>
                     </div>
                     <div className="flex items-center">
                       <Phone className="w-5 text-gray-500 mr-3" size={16} />
@@ -108,16 +108,23 @@ export default function Contact() {
           <Card className="bg-white shadow-sm">
             <CardContent className="p-8">
               <h3 className="font-serif text-2xl font-semibold mb-6">Konum</h3>
-              <div className="bg-gray-100 h-64 rounded-lg flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <MapPin className="mx-auto text-4xl mb-4" size={48} />
-                  <p className="text-lg font-medium">Harita Yükleniyor...</p>
-                  <p className="text-sm">Google Maps entegrasyonu yapılacak</p>
-                </div>
+              <div className="h-64 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3021.123456789!2d29.123456!3d41.123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab123456789ab%3A0x123456789abcdef!2sValentin%20Wedding!5e0!3m2!1str!2str!4v1234567890123!5m2!1str!2str"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Valentin Wedding Konumu"
+                ></iframe>
               </div>
               <div className="mt-4">
                 <a
-                  href="#"
+                  href="https://www.google.com/maps/search/Valentin+Wedding+Kurttepe+Suna+Kan+Blv+39%2F1A/@41.123456,29.123456,17z"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors duration-200"
                   data-testid="directions-link"
                 >

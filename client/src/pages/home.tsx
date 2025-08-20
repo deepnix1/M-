@@ -8,7 +8,7 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h1 className="font-serif text-5xl md:text-7xl font-bold text-gray-800 mb-6">
-            Mihbiran & Çağatay
+            Mihriban & Çağatay
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 font-light">
             Birlikte yeni bir hayata başlıyoruz
@@ -23,7 +23,7 @@ export default function Home() {
         <div className="relative max-w-4xl mx-auto mb-16">
           <img
             src={couplePhoto}
-            alt="Mihbiran ve Çağatay çift portresi"
+            alt="Mihriban ve Çağatay çift portresi"
             className="w-full h-96 md:h-[500px] object-cover rounded-lg shadow-lg"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>

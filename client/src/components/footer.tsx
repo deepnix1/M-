@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="bg-gray-800 text-white py-12">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <div className="mb-6">
-          <h3 className="font-serif text-3xl font-semibold mb-2">Mihbiran & Çağatay</h3>
+          <h3 className="font-serif text-3xl font-semibold mb-2">Mihriban & Çağatay</h3>
           <p className="text-gray-300">23 Ağustos 2025</p>
         </div>
         

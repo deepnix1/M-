@@ -12,7 +12,7 @@ export default function About() {
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <img
             src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
-            alt="Mihbiran ve Çağatay romantik an"
+            alt="Mihriban ve Çağatay romantik an"
             className="w-full h-80 object-cover rounded-lg shadow-md"
           />
           
@@ -21,7 +21,7 @@ export default function About() {
             <p className="text-gray-600 leading-relaxed mb-6">
               2019 yılının güzel bir bahar gününde, ortak arkadaşlarımızın düzenlediği bir etkinlikte tanıştık. 
               İlk bakışta aralarında özel bir bağ olduğunu hissettik. Çağatay'ın samimi gülümsemesi ve 
-              Mihbiran'ın neşeli enerjisi, o gün hayatlarımızı sonsuza dek değiştirdi.
+              Mihriban'ın neşeli enerjisi, o gün hayatlarımızı sonsuza dek değiştirdi.
             </p>
             
             <h3 className="font-serif text-2xl font-semibold mb-4">Birlikte Büyüdük</h3>
