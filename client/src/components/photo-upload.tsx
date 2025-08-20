@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { storage, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -37,21 +34,24 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
     setUploadProgress(0);
 
     try {
-      // Firebase Storage'a yükle
-      const storageRef = ref(storage, `photos/${Date.now()}_${file.name}`);
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
+      // FormData oluştur
+      const formData = new FormData();
+      formData.append('image', file);
+      if (description) {
+        formData.append('description', description);
+      }
 
-      // Firestore'a metadata kaydet
-      await addDoc(collection(db, 'photos'), {
-        filename: file.name,
-        imageUrl: downloadURL,
-        description: description || null,
-        uploadedAt: serverTimestamp(),
-        size: file.size,
-        type: file.type
+      // Netlify function'a yükle
+      const response = await fetch('/api/photos/upload', {
+        method: 'POST',
+        body: formData,
       });
 
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const result = await response.json();
       setUploadProgress(100);
       setFile(null);
       setDescription('');

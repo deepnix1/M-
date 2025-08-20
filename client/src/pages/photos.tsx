@@ -22,14 +22,13 @@ export default function Photos() {
   const [showUpload, setShowUpload] = useState(false);
 
   const { data: photos, isLoading, refetch } = useQuery({
-    queryKey: ["photos"],
+    queryKey: ["/api/photos"],
     queryFn: async () => {
-      const photosQuery = query(collection(db, "photos"), orderBy("uploadedAt", "desc"));
-      const snapshot = await getDocs(photosQuery);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Photo[];
+      const response = await fetch('/api/photos');
+      if (!response.ok) {
+        throw new Error('Failed to fetch photos');
+      }
+      return response.json() as Photo[];
     },
   });
 
