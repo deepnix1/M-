@@ -62,12 +62,16 @@ export default function Photos() {
 
   const onSubmit = (data: PhotoFormData) => {
     if (selectedFile) {
-      // In a real app, you'd upload the file to a storage service
-      // For now, we'll just use the filename
-      createPhotoMutation.mutate({
-        ...data,
-        filename: selectedFile.name,
-      });
+      const reader = new FileReader();
+      reader.onload = () => {
+        const imageData = reader.result as string;
+        createPhotoMutation.mutate({
+          ...data,
+          filename: selectedFile.name,
+          imageData: imageData,
+        });
+      };
+      reader.readAsDataURL(selectedFile);
     }
   };
 
@@ -184,10 +188,12 @@ export default function Photos() {
                 className="aspect-square bg-gray-100 relative group cursor-pointer overflow-hidden"
                 data-testid={`photo-card-${photo.id}`}
               >
-                {/* Photo placeholder */}
-                <div className="w-full h-full flex items-center justify-center bg-gray-50">
-                  <Upload className="h-8 w-8 text-gray-300" />
-                </div>
+                {/* Actual photo */}
+                <img 
+                  src={photo.imageData} 
+                  alt={photo.description || `${photo.guestName} tarafından paylaşılan fotoğraf`}
+                  className="w-full h-full object-cover"
+                />
                 
                 {/* Hover overlay with info */}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">

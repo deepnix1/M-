@@ -41,6 +41,7 @@ export class MemStorage implements IStorage {
     const photo: Photo = {
       ...insertPhoto,
       id,
+      description: insertPhoto.description || null,
       uploadedAt: new Date(),
     };
     this.photos.set(id, photo);
