@@ -37,7 +37,8 @@ export default function Contact() {
                     <h4 className="font-semibold text-gray-800 mb-1">Mekan</h4>
                     <p className="text-gray-600">
                       Valentin Wedding<br />
-                      Kurttepe Suna Kan Blv 39/1A
+                      Kurttepe, Suna Kan Blv 39/1A<br />
+                      01170 Çukurova/Adana
                     </p>
                   </div>
                 </div>
@@ -110,7 +111,7 @@ export default function Contact() {
               <h3 className="font-serif text-2xl font-semibold mb-6">Konum</h3>
               <div className="h-64 rounded-lg overflow-hidden">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3021.123456789!2d29.123456!3d41.123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab123456789ab%3A0x123456789abcdef!2sValentin%20Wedding!5e0!3m2!1str!2str!4v1234567890123!5m2!1str!2str"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3297.8825456!2d35.2655577!3d37.0691087!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1528893ee944697f%3A0x73286f9f24e6d6dc!2sValentin%20Wedding!5e0!3m2!1str!2str!4v1692547847000!5m2!1str!2str"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -122,7 +123,7 @@ export default function Contact() {
               </div>
               <div className="mt-4">
                 <a
-                  href="https://www.google.com/maps/search/Valentin+Wedding+Kurttepe+Suna+Kan+Blv+39%2F1A/@41.123456,29.123456,17z"
+                  href="https://maps.app.goo.gl/9MrzRhy6XEgAd9jV7"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors duration-200"
