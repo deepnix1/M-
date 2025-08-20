@@ -80,136 +80,141 @@ export default function Photos() {
 
   return (
     <section className="min-h-screen pt-20">
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-            Fotoğraf Galerisi
+      <div className="max-w-4xl mx-auto px-4 py-16">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h2 className="font-serif text-3xl font-bold text-gray-800 mb-4">
+            Anılarımız
           </h2>
-          <p className="text-xl text-gray-600 mb-8">Sizinle paylaştığımız güzel anılar</p>
           
-          {/* Photo Upload Form */}
-          <div className="max-w-2xl mx-auto bg-wedding-gray p-8 rounded-lg shadow-sm">
-            <h3 className="font-serif text-2xl font-semibold mb-6">Fotoğraf Paylaş</h3>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Upload Button */}
+          <Button
+            onClick={() => document.getElementById('photo-upload')?.click()}
+            className="mb-8 bg-gray-800 text-white hover:bg-gray-700 px-8 py-2"
+            data-testid="button-upload-trigger"
+          >
+            <Upload className="mr-2 h-4 w-4" />
+            Fotoğraf Paylaş
+          </Button>
+          
+          {/* Hidden Upload Form */}
+          <div className={`${selectedFile ? 'block' : 'hidden'} max-w-lg mx-auto bg-white p-6 rounded-lg shadow-sm border mb-8`}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
-                <Label htmlFor="photo-upload" className="text-gray-700 font-semibold">
-                  Fotoğrafınızı Seçin
-                </Label>
-                <div className="mt-2">
-                  <Input
-                    type="file"
-                    id="photo-upload"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-                    data-testid="input-photo-upload"
-                  />
-                  {selectedFile && (
-                    <p className="mt-2 text-sm text-gray-600">
-                      Seçilen dosya: {selectedFile.name}
-                    </p>
-                  )}
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="description" className="text-gray-700 font-semibold">
-                  Açıklama
-                </Label>
-                <Textarea
-                  id="description"
-                  {...register("description")}
-                  rows={3}
-                  placeholder="Bu fotoğraf hakkında birkaç kelime yazın..."
-                  className="mt-2 resize-none"
-                  data-testid="textarea-description"
+                <Input
+                  type="file"
+                  id="photo-upload"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  data-testid="input-photo-upload"
                 />
-                {errors.description && (
-                  <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
+                {selectedFile && (
+                  <p className="text-sm text-gray-600 mb-3">
+                    {selectedFile.name}
+                  </p>
                 )}
               </div>
               
               <div>
-                <Label htmlFor="guestName" className="text-gray-700 font-semibold">
-                  İsminiz
-                </Label>
                 <Input
                   type="text"
-                  id="guestName"
                   {...register("guestName")}
-                  placeholder="Adınız ve soyadınız"
-                  className="mt-2"
+                  placeholder="İsminiz"
+                  className="mb-3"
                   data-testid="input-guest-name"
                 />
                 {errors.guestName && (
-                  <p className="text-red-500 text-sm mt-1">{errors.guestName.message}</p>
+                  <p className="text-red-500 text-sm">{errors.guestName.message}</p>
                 )}
               </div>
               
-              <Button
-                type="submit"
-                disabled={!selectedFile || createPhotoMutation.isPending}
-                className="w-full bg-gray-800 text-white hover:bg-gray-700"
-                data-testid="button-submit-photo"
-              >
-                {createPhotoMutation.isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Paylaşılıyor...
-                  </>
-                ) : (
-                  <>
-                    <Upload className="mr-2 h-4 w-4" />
-                    Fotoğrafı Paylaş
-                  </>
-                )}
-              </Button>
+              <div>
+                <Textarea
+                  {...register("description")}
+                  rows={2}
+                  placeholder="Açıklama (opsiyonel)"
+                  className="resize-none mb-3"
+                  data-testid="textarea-description"
+                />
+              </div>
+              
+              <div className="flex gap-2">
+                <Button
+                  type="submit"
+                  disabled={!selectedFile || createPhotoMutation.isPending}
+                  className="flex-1 bg-gray-800 text-white hover:bg-gray-700"
+                  data-testid="button-submit-photo"
+                >
+                  {createPhotoMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Paylaşılıyor...
+                    </>
+                  ) : (
+                    'Paylaş'
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedFile(null);
+                    reset();
+                  }}
+                  className="px-4"
+                >
+                  İptal
+                </Button>
+              </div>
             </form>
           </div>
         </div>
 
-        {/* Photo Gallery Grid */}
+        {/* Instagram-style Photo Grid */}
         {isLoading ? (
           <div className="flex justify-center items-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-600" />
-            <span className="ml-2 text-gray-600">Fotoğraflar yükleniyor...</span>
+            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
           </div>
         ) : photos && photos.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-1 md:gap-2">
             {photos.map((photo) => (
-              <Card
+              <div
                 key={photo.id}
-                className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200"
+                className="aspect-square bg-gray-100 relative group cursor-pointer overflow-hidden"
                 data-testid={`photo-card-${photo.id}`}
               >
-                <div className="aspect-video bg-gray-100 flex items-center justify-center">
-                  {/* Placeholder for actual image */}
-                  <Upload className="h-12 w-12 text-gray-400" />
-                  <div className="ml-2 text-gray-400 text-sm">
-                    {photo.filename}
+                {/* Photo placeholder */}
+                <div className="w-full h-full flex items-center justify-center bg-gray-50">
+                  <Upload className="h-8 w-8 text-gray-300" />
+                </div>
+                
+                {/* Hover overlay with info */}
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <div className="text-white text-center p-2">
+                    <p className="text-xs font-medium" data-testid={`photo-author-${photo.id}`}>
+                      {photo.guestName}
+                    </p>
+                    {photo.description && (
+                      <p className="text-xs mt-1 line-clamp-2" data-testid={`photo-description-${photo.id}`}>
+                        {photo.description}
+                      </p>
+                    )}
                   </div>
                 </div>
-                <CardContent className="p-4">
-                  {photo.description && (
-                    <p className="text-gray-600 text-sm mb-2" data-testid={`photo-description-${photo.id}`}>
-                      {photo.description}
-                    </p>
-                  )}
-                  <p className="text-gray-400 text-xs" data-testid={`photo-author-${photo.id}`}>
-                    - {photo.guestName}
-                  </p>
-                </CardContent>
-              </Card>
+              </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-600 mb-2">
-              Henüz fotoğraf paylaşılmamış
+          <div className="text-center py-20">
+            <div className="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <Upload className="h-10 w-10 text-gray-300" />
+            </div>
+            <h3 className="text-lg text-gray-500 mb-2">
+              Henüz fotoğraf yok
             </h3>
-            <p className="text-gray-500">
-              İlk fotoğrafı paylaşan siz olun!
+            <p className="text-sm text-gray-400">
+              İlk anıyı paylaşın
             </p>
           </div>
         )}
