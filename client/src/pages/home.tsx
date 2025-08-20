@@ -1,5 +1,6 @@
 import { Calendar, Heart, Camera, Music } from "lucide-react";
 import couplePhoto from "@assets/IMG_7300_1755716799100.jpg";
+import Countdown from "@/components/countdown";
 
 export default function Home() {
   return (
@@ -54,6 +55,9 @@ export default function Home() {
           </div>
         </div>
       </div>
+      
+      {/* Countdown Section */}
+      <Countdown />
     </section>
   );
 }

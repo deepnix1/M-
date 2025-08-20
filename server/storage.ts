@@ -14,8 +14,13 @@ export interface IStorage {
 }
 
 // Initialize database connection
-const sql = neon(process.env.DATABASE_URL!);
-const db = drizzle(sql);
+let sql: any;
+let db: any;
+
+if (process.env.DATABASE_URL) {
+  sql = neon(process.env.DATABASE_URL);
+  db = drizzle(sql);
+}
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
@@ -98,4 +103,4 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = process.env.DATABASE_URL ? new DatabaseStorage() : new MemStorage();
