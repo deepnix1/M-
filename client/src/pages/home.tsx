@@ -42,7 +42,7 @@ export default function Home() {
               <Camera className="text-2xl text-gray-600" size={24} />
             </div>
             <h3 className="font-serif text-xl font-semibold mb-2">Fotoğraf Çekimi</h3>
-            <p className="text-gray-600">16:00 - Park Alanı</p>
+            <p className="text-gray-600">19:00'dan itibaren başlayacaktır</p>
           </div>
           <div className="p-6" data-testid="timeline-yemek">
             <div className="w-16 h-16 bg-wedding-rose rounded-full flex items-center justify-center mx-auto mb-4">
