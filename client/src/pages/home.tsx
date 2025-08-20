@@ -1,4 +1,5 @@
 import { Calendar, Heart, Camera, Music } from "lucide-react";
+import couplePhoto from "@assets/IMG_7300_1755716799100.jpg";
 
 export default function Home() {
   return (
@@ -21,7 +22,7 @@ export default function Home() {
         {/* Hero Image */}
         <div className="relative max-w-4xl mx-auto mb-16">
           <img
-            src="/attached_assets/IMG_7300_1755716799100.jpg"
+            src={couplePhoto}
             alt="Mihbiran ve Çağatay çift portresi"
             className="w-full h-96 md:h-[500px] object-cover rounded-lg shadow-lg"
           />
