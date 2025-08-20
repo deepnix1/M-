@@ -40,9 +40,11 @@ export default function About() {
           <div>
             <h3 className="font-serif text-2xl font-semibold mb-4">Evlilik Teklifi</h3>
             <p className="text-gray-600 leading-relaxed mb-6">
-              2 yıl önce Çağatay beni Mersin'e götüreceğini söyledi. Güzel bir yaz akşamında sahilde ve teknede 
-              özenle hazırlanmış bir evlilik teklifi yaptı ve hayatımın en güzel sorusunu sordu. 
-              Tabii ki cevabımız "EVET!" oldu. O an, zamanın durduğunu hissettik.
+              2 yıl önce Çağatay beni Mersin'e götüreceğini söyledi. O akşam her şeyin normal bir tatil olacağını 
+              sanıyordum. Güzel bir yaz akşamında önce sahilde romantik bir yürüyüş yaptık, sonra tekneye bindik. 
+              Denizin ortasında, şehir ışıklarının yansıdığı sularda, Çağatay dizlerinin üstüne çöktü ve 
+              özenle hazırladığı yüzükle birlikte hayatımın en güzel sorusunu sordu. Tabii ki cevabımız "EVET!" oldu. 
+              O an, zamanın durduğunu ve sadece ikimizin var olduğunu hissettik.
             </p>
             
             <h3 className="font-serif text-2xl font-semibold mb-4">Gelecek Hayallerimiz</h3>

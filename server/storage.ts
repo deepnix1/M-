@@ -1,5 +1,8 @@
-import { type User, type InsertUser, type Photo, type InsertPhoto } from "@shared/schema";
+import { type User, type InsertUser, type Photo, type InsertPhoto, users, photos } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -9,6 +12,10 @@ export interface IStorage {
   getAllPhotos(): Promise<Photo[]>;
   getPhoto(id: string): Promise<Photo | undefined>;
 }
+
+// Initialize database connection
+const sql = neon(process.env.DATABASE_URL!);
+const db = drizzle(sql);
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
@@ -59,4 +66,36 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  async getUser(id: string): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.id, id));
+    return result[0];
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.username, username));
+    return result[0];
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const result = await db.insert(users).values(insertUser).returning();
+    return result[0];
+  }
+
+  async createPhoto(insertPhoto: InsertPhoto): Promise<Photo> {
+    const result = await db.insert(photos).values(insertPhoto).returning();
+    return result[0];
+  }
+
+  async getAllPhotos(): Promise<Photo[]> {
+    const result = await db.select().from(photos).orderBy(desc(photos.uploadedAt));
+    return result;
+  }
+
+  async getPhoto(id: string): Promise<Photo | undefined> {
+    const result = await db.select().from(photos).where(eq(photos.id, id));
+    return result[0];
+  }
+}
+
+export const storage = new DatabaseStorage();
