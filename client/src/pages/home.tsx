@@ -1,4 +1,4 @@
-import { Calendar, Heart, Camera, Utensils } from "lucide-react";
+import { Calendar, Heart, Camera, Music } from "lucide-react";
 
 export default function Home() {
   return (
@@ -46,10 +46,10 @@ export default function Home() {
           </div>
           <div className="p-6" data-testid="timeline-yemek">
             <div className="w-16 h-16 bg-wedding-rose rounded-full flex items-center justify-center mx-auto mb-4">
-              <Utensils className="text-2xl text-gray-600" size={24} />
+              <Music className="text-2xl text-gray-600" size={24} />
             </div>
-            <h3 className="font-serif text-xl font-semibold mb-2">Düğün Yemeği</h3>
-            <p className="text-gray-600">19:00 - Grand Hotel</p>
+            <h3 className="font-serif text-xl font-semibold mb-2">Dans ve Eğlence</h3>
+            <p className="text-gray-600">Gece boyunca müzik ve dans</p>
           </div>
         </div>
       </div>
