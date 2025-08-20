@@ -14,26 +14,31 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
   const [description, setDescription] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile && selectedFile.type.startsWith('image/')) {
       setFile(selectedFile);
+      setError(null);
     } else {
-      alert('Lütfen geçerli bir resim dosyası seçin.');
+      setError('Lütfen geçerli bir resim dosyası seçin.');
     }
   };
 
   const handleUpload = async () => {
     if (!file) {
-      alert('Lütfen bir dosya seçin.');
+      setError('Lütfen bir dosya seçin.');
       return;
     }
 
     setIsUploading(true);
     setUploadProgress(0);
+    setError(null);
 
     try {
+      console.log('Starting upload for file:', file.name, 'Size:', file.size);
+      
       // FormData oluştur
       const formData = new FormData();
       formData.append('image', file);
@@ -41,17 +46,26 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
         formData.append('description', description);
       }
 
+      console.log('FormData created, sending to API...');
+
       // Netlify function'a yükle
       const response = await fetch('/api/photos/upload', {
         method: 'POST',
         body: formData,
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+
       if (!response.ok) {
-        throw new Error('Upload failed');
+        const errorText = await response.text();
+        console.error('Upload failed:', errorText);
+        throw new Error(`Upload failed: ${response.status} - ${errorText}`);
       }
 
       const result = await response.json();
+      console.log('Upload successful:', result);
+      
       setUploadProgress(100);
       setFile(null);
       setDescription('');
@@ -63,7 +77,8 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
       alert('Fotoğraf başarıyla yüklendi!');
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Fotoğraf yüklenirken bir hata oluştu.');
+      const errorMessage = error instanceof Error ? error.message : 'Bilinmeyen hata';
+      setError(`Fotoğraf yüklenirken bir hata oluştu: ${errorMessage}`);
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
@@ -105,6 +120,12 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
         {file && (
           <div className="text-sm text-gray-600">
             Seçilen dosya: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+          </div>
+        )}
+
+        {error && (
+          <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+            {error}
           </div>
         )}
 
