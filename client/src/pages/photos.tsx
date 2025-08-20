@@ -1,84 +1,45 @@
 import { useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { insertPhotoSchema, type Photo } from "@shared/schema";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useQuery } from "@tanstack/react-query";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Loader2 } from "lucide-react";
-import type { z } from "zod";
+import PhotoUpload from "@/components/photo-upload";
 
-type PhotoFormData = z.infer<typeof insertPhotoSchema>;
+interface Photo {
+  id: string;
+  filename: string;
+  imageUrl: string;
+  description?: string;
+  uploadedAt: any;
+  size?: number;
+  type?: string;
+}
 
 export default function Photos() {
   const { toast } = useToast();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [showUpload, setShowUpload] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      guestName: "",
-      description: "",
+  const { data: photos, isLoading, refetch } = useQuery({
+    queryKey: ["photos"],
+    queryFn: async () => {
+      const photosQuery = query(collection(db, "photos"), orderBy("uploadedAt", "desc"));
+      const snapshot = await getDocs(photosQuery);
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Photo[];
     },
   });
 
-  const { data: photos, isLoading } = useQuery<Photo[]>({
-    queryKey: ["/api/photos"],
-  });
-
-  const createPhotoMutation = useMutation({
-    mutationFn: async (data: PhotoFormData) => {
-      const response = await apiRequest("POST", "/api/photos", data);
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/photos"] });
-      toast({
-        title: "Başarılı!",
-        description: "Fotoğrafınız başarıyla paylaşıldı.",
-      });
-      reset();
-      setSelectedFile(null);
-    },
-    onError: () => {
-      toast({
-        title: "Hata!",
-        description: "Fotoğraf paylaşılırken bir hata oluştu.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const onSubmit = (data: any) => {
-    if (selectedFile && data.guestName) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageData = reader.result as string;
-        createPhotoMutation.mutate({
-          filename: selectedFile.name,
-          imageData: imageData,
-          guestName: data.guestName,
-          description: data.description || "",
-        });
-      };
-      reader.readAsDataURL(selectedFile);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-    }
+  const handlePhotoUploaded = () => {
+    refetch();
+    setShowUpload(false);
+    toast({
+      title: "Başarılı!",
+      description: "Fotoğrafınız başarıyla yüklendi.",
+    });
   };
 
   return (
@@ -92,86 +53,19 @@ export default function Photos() {
           
           {/* Upload Button */}
           <Button
-            onClick={() => document.getElementById('photo-upload')?.click()}
+            onClick={() => setShowUpload(!showUpload)}
             className="mb-8 bg-gray-800 text-white hover:bg-gray-700 px-8 py-2"
-            data-testid="button-upload-trigger"
           >
             <Upload className="mr-2 h-4 w-4" />
-            Fotoğraf Paylaş
+            {showUpload ? 'Yüklemeyi Kapat' : 'Fotoğraf Yükle'}
           </Button>
           
-          {/* Hidden Upload Form */}
-          <div className={`${selectedFile ? 'block' : 'hidden'} max-w-lg mx-auto bg-white p-6 rounded-lg shadow-sm border mb-8`}>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div>
-                <Input
-                  type="file"
-                  id="photo-upload"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  data-testid="input-photo-upload"
-                />
-                {selectedFile && (
-                  <p className="text-sm text-gray-600 mb-3">
-                    {selectedFile.name}
-                  </p>
-                )}
-              </div>
-              
-              <div>
-                <Input
-                  type="text"
-                  id="guestName"
-                  {...register("guestName")}
-                  placeholder="İsminiz"
-                  className="mb-3"
-                  required
-                  data-testid="input-guest-name"
-                />
-              </div>
-              
-              <div>
-                <Textarea
-                  id="description" 
-                  {...register("description")}
-                  rows={2}
-                  placeholder="Açıklama (opsiyonel)"
-                  className="resize-none mb-3"
-                  data-testid="textarea-description"
-                />
-              </div>
-              
-              <div className="flex gap-2">
-                <Button
-                  type="submit"
-                  disabled={!selectedFile || createPhotoMutation.isPending}
-                  className="flex-1 bg-gray-800 text-white hover:bg-gray-700"
-                  data-testid="button-submit-photo"
-                >
-                  {createPhotoMutation.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Paylaşılıyor...
-                    </>
-                  ) : (
-                    'Paylaş'
-                  )}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setSelectedFile(null);
-                    reset();
-                  }}
-                  className="px-4"
-                >
-                  İptal
-                </Button>
-              </div>
-            </form>
-          </div>
+          {/* Upload Form */}
+          {showUpload && (
+            <div className="mb-8">
+              <PhotoUpload onPhotoUploaded={handlePhotoUploaded} />
+            </div>
+          )}
         </div>
 
         {/* Instagram-style Photo Grid */}
@@ -185,26 +79,28 @@ export default function Photos() {
               <div
                 key={photo.id}
                 className="aspect-square bg-gray-100 relative group cursor-pointer overflow-hidden"
-                data-testid={`photo-card-${photo.id}`}
               >
                 {/* Actual photo */}
                 <img 
-                  src={photo.imageData} 
-                  alt={photo.description || `${photo.guestName} tarafından paylaşılan fotoğraf`}
+                  src={photo.imageUrl} 
+                  alt={photo.description || `Yüklenen fotoğraf`}
                   className="w-full h-full object-cover"
                 />
                 
                 {/* Hover overlay with info */}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <div className="text-white text-center p-2">
-                    <p className="text-xs font-medium" data-testid={`photo-author-${photo.id}`}>
-                      {photo.guestName}
-                    </p>
                     {photo.description && (
-                      <p className="text-xs mt-1 line-clamp-2" data-testid={`photo-description-${photo.id}`}>
+                      <p className="text-xs mt-1 line-clamp-2">
                         {photo.description}
                       </p>
                     )}
+                    <p className="text-xs mt-1 text-gray-300">
+                      {photo.uploadedAt?.toDate?.() ? 
+                        photo.uploadedAt.toDate().toLocaleDateString('tr-TR') : 
+                        'Yeni yüklendi'
+                      }
+                    </p>
                   </div>
                 </div>
               </div>
