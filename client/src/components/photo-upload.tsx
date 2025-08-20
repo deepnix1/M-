@@ -48,8 +48,12 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
 
       console.log('FormData created, sending to API...');
 
-      // Netlify function'a yükle
-      const response = await fetch('/api/photos/upload', {
+      // Check if we're in development or production
+      const isDevelopment = import.meta.env.DEV;
+      const uploadUrl = isDevelopment ? '/api/photos/upload' : '/api/photos/upload';
+
+      // API'ye yükle
+      const response = await fetch(uploadUrl, {
         method: 'POST',
         body: formData,
       });
@@ -113,7 +117,6 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
             placeholder="Fotoğraf açıklaması..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            disabled={isUploading}
           />
         </div>
 

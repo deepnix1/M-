@@ -12,8 +12,12 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  // Add /api prefix for Netlify functions
-  const apiUrl = url.startsWith('/api') ? url : `/api${url}`;
+  // Check if we're in development or production
+  const isDevelopment = import.meta.env.DEV;
+  
+  // In development, use direct API calls to local server
+  // In production, use Netlify functions
+  const apiUrl = isDevelopment ? url : (url.startsWith('/api') ? url : `/api${url}`);
   
   const res = await fetch(apiUrl, {
     method,
@@ -32,9 +36,13 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    // Add /api prefix for Netlify functions
+    // Check if we're in development or production
+    const isDevelopment = import.meta.env.DEV;
+    
     const url = queryKey.join("/") as string;
-    const apiUrl = url.startsWith('/api') ? url : `/api${url}`;
+    // In development, use direct API calls to local server
+    // In production, use Netlify functions
+    const apiUrl = isDevelopment ? url : (url.startsWith('/api') ? url : `/api${url}`);
     
     const res = await fetch(apiUrl, {
       credentials: "include",

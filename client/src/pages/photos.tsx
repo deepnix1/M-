@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Loader2 } from "lucide-react";
@@ -22,7 +20,7 @@ export default function Photos() {
   const [showUpload, setShowUpload] = useState(false);
 
   const { data: photos, isLoading, refetch } = useQuery({
-    queryKey: ["/api/photos"],
+    queryKey: ["photos"],
     queryFn: async () => {
       const response = await fetch('/api/photos');
       if (!response.ok) {
