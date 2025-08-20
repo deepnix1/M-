@@ -1,3 +1,5 @@
+import couplePhoto from "@assets/WhatsApp Görsel 2025-08-20 saat 22.04.32_c77cff25_1755718163232.jpg";
+
 export default function About() {
   return (
     <section className="min-h-screen pt-20 bg-wedding-gray">
@@ -11,7 +13,7 @@ export default function About() {
 
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <img
-            src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400"
+            src={couplePhoto}
             alt="Mihriban ve Çağatay romantik an"
             className="w-full h-80 object-cover rounded-lg shadow-md"
           />
