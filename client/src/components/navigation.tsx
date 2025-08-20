@@ -9,7 +9,7 @@ export default function Navigation() {
   const navItems = [
     { href: "/", label: "Ana Sayfa" },
     { href: "/hakkimizda", label: "Hikayemiz" },
-    { href: "/photos", label: "Fotoğraflar" },
+    { href: "/fotograflar", label: "Fotoğraflar" },
     { href: "/iletisim", label: "İletişim" },
   ];
 

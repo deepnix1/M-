@@ -13,7 +13,7 @@ try {
     const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
     app = initializeApp({
       credential: cert(serviceAccount),
-      storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "mihribancagatay-d5d82.appspot.com"
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "mihribancagatay-d5d82.firebasestorage.app"
     });
   } else {
     // Try to read from JSON file
@@ -25,7 +25,7 @@ try {
       const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
       app = initializeApp({
         credential: cert(serviceAccount),
-        storageBucket: "mihribancagatay-d5d82.appspot.com"
+        storageBucket: "mihribancagatay-d5d82.firebasestorage.app"
       });
       console.log("Firebase initialized from JSON file");
     } else {

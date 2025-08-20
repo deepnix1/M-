@@ -12,14 +12,7 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  // Check if we're in development or production
-  const isDevelopment = import.meta.env.DEV;
-  
-  // In development, use direct API calls to local server
-  // In production, use Netlify functions
-  const apiUrl = isDevelopment ? url : (url.startsWith('/api') ? url : `/api${url}`);
-  
-  const res = await fetch(apiUrl, {
+  const res = await fetch(url, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
@@ -36,15 +29,7 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    // Check if we're in development or production
-    const isDevelopment = import.meta.env.DEV;
-    
-    const url = queryKey.join("/") as string;
-    // In development, use direct API calls to local server
-    // In production, use Netlify functions
-    const apiUrl = isDevelopment ? url : (url.startsWith('/api') ? url : `/api${url}`);
-    
-    const res = await fetch(apiUrl, {
+    const res = await fetch(queryKey.join("/") as string, {
       credentials: "include",
     });
 

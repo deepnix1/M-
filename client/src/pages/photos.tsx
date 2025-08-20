@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Loader2 } from "lucide-react";
@@ -22,11 +24,12 @@ export default function Photos() {
   const { data: photos, isLoading, refetch } = useQuery({
     queryKey: ["photos"],
     queryFn: async () => {
-      const response = await fetch('/api/photos');
-      if (!response.ok) {
-        throw new Error('Failed to fetch photos');
-      }
-      return response.json() as Photo[];
+      const photosQuery = query(collection(db, "photos"), orderBy("uploadedAt", "desc"));
+      const snapshot = await getDocs(photosQuery);
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Photo[];
     },
   });
 
