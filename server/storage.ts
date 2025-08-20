@@ -3,6 +3,7 @@ import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 import { eq, desc } from "drizzle-orm";
+import { FirebaseStorage } from "./firebase-storage";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -103,4 +104,4 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = process.env.DATABASE_URL ? new DatabaseStorage() : new MemStorage();
+export const storage = process.env.FIREBASE_CONFIG ? new FirebaseStorage() : new MemStorage();
