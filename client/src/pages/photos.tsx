@@ -28,6 +28,7 @@ export default function Photos() {
     resolver: zodResolver(insertPhotoSchema),
     defaultValues: {
       filename: "",
+      imageData: "",
       description: "",
       guestName: "",
     },
@@ -61,10 +62,12 @@ export default function Photos() {
   });
 
   const onSubmit = (data: PhotoFormData) => {
+    console.log('Form submitted', data, selectedFile);
     if (selectedFile) {
       const reader = new FileReader();
       reader.onload = () => {
         const imageData = reader.result as string;
+        console.log('Image data ready, submitting...');
         createPhotoMutation.mutate({
           ...data,
           filename: selectedFile.name,
@@ -72,6 +75,8 @@ export default function Photos() {
         });
       };
       reader.readAsDataURL(selectedFile);
+    } else {
+      console.log('No file selected');
     }
   };
 
@@ -123,7 +128,7 @@ export default function Photos() {
               <div>
                 <Input
                   type="text"
-                  {...register("guestName")}
+                  {...register("guestName", { required: "İsminiz zorunludur" })}
                   placeholder="İsminiz"
                   className="mb-3"
                   data-testid="input-guest-name"
@@ -132,6 +137,13 @@ export default function Photos() {
                   <p className="text-red-500 text-sm">{errors.guestName.message}</p>
                 )}
               </div>
+              
+              {/* Debug: Show all form errors */}
+              {Object.keys(errors).length > 0 && (
+                <div className="text-red-500 text-xs">
+                  Form hataları: {JSON.stringify(errors)}
+                </div>
+              )}
               
               <div>
                 <Textarea
