@@ -34,8 +34,8 @@ export default function Home() {
             <div className="w-16 h-16 bg-wedding-rose rounded-full flex items-center justify-center mx-auto mb-4">
               <Heart className="text-2xl text-gray-600" size={24} />
             </div>
-            <h3 className="font-serif text-xl font-semibold mb-2">Nikah Töreni</h3>
-            <p className="text-gray-600">15:00 - Belediye Nikah Salonu</p>
+            <h3 className="font-serif text-xl font-semibold mb-2">Düğün Salonu</h3>
+            <p className="text-gray-600">19:00 - Valentin wedding Kurttepe suna kan blv 39/1A</p>
           </div>
           <div className="p-6" data-testid="timeline-fotograf">
             <div className="w-16 h-16 bg-wedding-rose rounded-full flex items-center justify-center mx-auto mb-4">

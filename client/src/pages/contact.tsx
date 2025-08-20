@@ -25,7 +25,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-1">Tarih ve Saat</h4>
-                    <p className="text-gray-600">15 Haziran 2024, Cumartesi - 15:00</p>
+                    <p className="text-gray-600">15 Haziran 2024, Cumartesi - 19:00</p>
                   </div>
                 </div>
                 
@@ -36,9 +36,8 @@ export default function Contact() {
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-1">Mekan</h4>
                     <p className="text-gray-600">
-                      Grand Hotel İstanbul<br />
-                      Levent Mahallesi, Büyükdere Cad. No:123<br />
-                      Şişli/İstanbul
+                      Valentin Wedding<br />
+                      Kurttepe Suna Kan Blv 39/1A
                     </p>
                   </div>
                 </div>
