@@ -12,6 +12,7 @@ export interface IStorage {
   createPhoto(photo: InsertPhoto): Promise<Photo>;
   getAllPhotos(): Promise<Photo[]>;
   getPhoto(id: string): Promise<Photo | undefined>;
+  uploadImage(buffer: Buffer, filename: string): Promise<string>;
 }
 
 // Initialize database connection
@@ -70,6 +71,13 @@ export class MemStorage implements IStorage {
   async getPhoto(id: string): Promise<Photo | undefined> {
     return this.photos.get(id);
   }
+
+  async uploadImage(buffer: Buffer, filename: string): Promise<string> {
+    // For local development, convert buffer to base64 data URL
+    const base64 = buffer.toString('base64');
+    const mimeType = 'image/jpeg'; // Default to JPEG
+    return `data:${mimeType};base64,${base64}`;
+  }
 }
 
 export class DatabaseStorage implements IStorage {
@@ -95,12 +103,18 @@ export class DatabaseStorage implements IStorage {
 
   async getAllPhotos(): Promise<Photo[]> {
     const result = await db.select().from(photos).orderBy(desc(photos.uploadedAt));
-    return result;
+    return result[0];
   }
 
   async getPhoto(id: string): Promise<Photo | undefined> {
     const result = await db.select().from(photos).where(eq(photos.id, id));
     return result[0];
+  }
+
+  async uploadImage(buffer: Buffer, filename: string): Promise<string> {
+    // For database storage, you might want to implement file storage
+    // For now, return a placeholder
+    throw new Error('File upload not implemented for database storage');
   }
 }
 

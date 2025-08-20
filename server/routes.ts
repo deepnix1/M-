@@ -28,7 +28,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const photos = await storage.getAllPhotos();
       res.json(photos);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch photos" });
+      console.error('Error fetching photos:', error);
+      res.status(500).json({ message: "Failed to fetch photos", error: error.message });
     }
   });
 
@@ -39,7 +40,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No image file provided" });
       }
 
+      console.log('File received:', {
+        originalname: req.file.originalname,
+        mimetype: req.file.mimetype,
+        size: req.file.size
+      });
+
       const filename = `${randomUUID()}.jpg`;
+      
+      // Check if storage has uploadImage method
+      if (typeof (storage as any).uploadImage !== 'function') {
+        console.error('Storage does not support uploadImage method');
+        return res.status(500).json({ message: "Storage does not support file uploads" });
+      }
+
       const imageUrl = await (storage as any).uploadImage(req.file.buffer, filename);
       
       const photoData = {
@@ -49,11 +63,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         uploadedAt: new Date(),
       };
 
+      console.log('Photo data created:', photoData);
+
       const photo = await storage.createPhoto(photoData);
+      console.log('Photo saved successfully:', photo);
+      
       res.status(201).json(photo);
     } catch (error) {
       console.error('Upload error:', error);
-      res.status(500).json({ message: "Failed to upload photo" });
+      res.status(500).json({ 
+        message: "Failed to upload photo", 
+        error: error.message,
+        stack: error.stack 
+      });
     }
   });
 
