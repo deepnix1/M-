@@ -67,7 +67,7 @@ export default function Contact() {
                   <div className="space-y-2">
                     <div className="flex items-center">
                       <User className="w-5 text-gray-500 mr-3" size={16} />
-                      <span className="text-gray-600">Mihriban Kaya</span>
+                      <span className="text-gray-600">Mihriban DAL</span>
                     </div>
                     <div className="flex items-center">
                       <Phone className="w-5 text-gray-500 mr-3" size={16} />
@@ -81,7 +81,7 @@ export default function Contact() {
                   <div className="space-y-2">
                     <div className="flex items-center">
                       <User className="w-5 text-gray-500 mr-3" size={16} />
-                      <span className="text-gray-600">Çağatay Özdemir</span>
+                      <span className="text-gray-600">Çağatay DAL</span>
                     </div>
                     <div className="flex items-center">
                       <Phone className="w-5 text-gray-500 mr-3" size={16} />
