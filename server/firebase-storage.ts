@@ -47,6 +47,10 @@ try {
 const db = app ? getFirestore(app) : null;
 const bucket = app ? getStorage(app).bucket() : null;
 
+if (bucket) {
+  console.log("Using Firebase Storage bucket:", bucket.name);
+}
+
 export class FirebaseStorage {
   async getUser(id: string): Promise<User | undefined> {
     if (!db) throw new Error("Firebase not configured");
@@ -104,6 +108,10 @@ export class FirebaseStorage {
 
   async uploadImage(file: Buffer, filename: string): Promise<string> {
     if (!bucket) throw new Error("Firebase Storage not configured");
+    const [exists] = await bucket.exists();
+    if (!exists) {
+      throw new Error(`Storage bucket not found: ${bucket.name}`);
+    }
     const fileRef = bucket.file(`photos/${filename}`);
     await fileRef.save(file, {
       metadata: {

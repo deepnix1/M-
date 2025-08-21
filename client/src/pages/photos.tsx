@@ -78,7 +78,7 @@ export default function Photos() {
               >
                 {/* Actual photo */}
                 <img 
-                  src={photo.imageUrl} 
+                  src={(photo as any).imageUrl || (photo as any).imageData} 
                   alt={photo.description || `Yüklenen fotoğraf`}
                   className="w-full h-full object-cover"
                 />
