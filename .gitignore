@@ -16,6 +16,7 @@ out/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*
 
 # Firebase
 *-firebase-adminsdk-*.json
@@ -24,6 +25,9 @@ serviceAccountKey.json
 
 # Setup scripts (temporary helpers)
 setup-firebase.js
+
+# Render deployment
+render.yaml
 
 # Logs
 logs

@@ -68,18 +68,22 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(import.meta.dirname, "public");
-
-  if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
-    );
+  // For Render deployment, serve from the client/dist directory
+  const buildDir = process.env.CLIENT_BUILD_DIR || path.resolve(import.meta.dirname, "..", "client", "dist");
+  
+  if (!fs.existsSync(buildDir)) {
+    throw new Error(`Could not find the build directory: ${buildDir}, make sure to build the client first`);
   }
-
-  app.use(express.static(distPath));
-
-  // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+  
+  app.use(express.static(buildDir));
+  
+  // Handle client-side routing by serving index.html for all non-API routes
+  app.use("*", (req, res) => {
+    // Don't interfere with API routes
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ message: 'API endpoint not found' });
+    }
+    
+    res.sendFile(path.resolve(buildDir, "index.html"));
   });
 }

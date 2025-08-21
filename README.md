@@ -1,107 +1,97 @@
-# M- Wedding Photo Gallery
+# M- Photo Application
 
-A modern wedding photo gallery built with React, TypeScript, and Firebase, deployed on Vercel.
+A modern photo sharing application built with React, Express, and Firebase.
 
-## Features
+## 🚀 Quick Start
 
-- 📸 Photo upload and gallery display
-- 🎨 Modern, responsive UI with Tailwind CSS
-- 🔐 Firebase Storage integration
-- 📱 Mobile-friendly design
-- ⚡ Fast performance with Vite
-
-## Tech Stack
-
-- **Frontend**: React 18, TypeScript, Tailwind CSS
-- **Backend**: Vercel Serverless Functions
-- **Storage**: Firebase Storage
-- **Database**: Neon PostgreSQL (optional)
-- **Build Tool**: Vite
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ 
-- Firebase project with Storage enabled
-- Vercel account
-
-### Local Development
-
-1. Clone the repository
+### Development
 ```bash
-git clone <your-repo-url>
-cd M-
-```
-
-2. Install dependencies
-```bash
+# Install dependencies
 npm install
-cd client && npm install
-```
 
-3. Set up environment variables
-Create a `.env.local` file in the root directory:
-```env
-FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"your-project-id",...}
-FIREBASE_PROJECT_ID=your-project-id
-FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
-```
-
-4. Start development server
-```bash
+# Start development server
 npm run dev
+
+# Build for production
+npm run build
 ```
 
-### Vercel Deployment
+### Production Deployment
 
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Set environment variables in Vercel dashboard:
-   - `FIREBASE_SERVICE_ACCOUNT`: Your Firebase service account JSON
-   - `FIREBASE_PROJECT_ID`: Your Firebase project ID
-   - `FIREBASE_STORAGE_BUCKET`: Your Firebase storage bucket name
-4. Deploy!
+#### Render Deployment (Recommended)
+1. **Prepare your project:**
+   ```bash
+   # Run the deployment script
+   ./deploy.sh          # Linux/Mac
+   deploy.bat           # Windows
+   ```
 
-## Project Structure
+2. **Follow the Render deployment guide:**
+   - [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md)
+
+#### Vercel Deployment
+1. **Set environment variables** in Vercel dashboard
+2. **Deploy** using Vercel CLI or dashboard
+
+## 🔧 Environment Variables
+
+Create a `.env` file in your project root:
+
+```bash
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+
+# Firebase Configuration
+FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"your-project-id",...}
+FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+
+# Database (optional)
+DATABASE_URL=postgresql://username:password@host:port/database
+```
+
+## 📁 Project Structure
 
 ```
-├── api/                    # Vercel API routes
-│   ├── photos.ts          # Photo CRUD operations
-│   └── photos/[id].ts     # Individual photo operations
 ├── client/                 # React frontend
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.ts
+│   ├── src/               # Source code
+│   ├── dist/              # Built files (after npm run build)
+│   └── package.json       # Frontend dependencies
+├── server/                 # Express backend
+│   ├── index.ts           # Server entry point
+│   ├── routes.ts          # API routes
+│   ├── storage.ts         # Data storage layer
+│   └── firebase-storage.ts # Firebase integration
 ├── shared/                 # Shared schemas and types
-├── server/                 # Server utilities (storage, etc.)
-├── vercel.json            # Vercel configuration
-└── package.json           # Root package.json
+├── render.yaml            # Render deployment config
+└── package.json           # Root dependencies
 ```
 
-## Environment Variables
+## 🚀 Deployment Scripts
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `FIREBASE_SERVICE_ACCOUNT` | Firebase service account JSON | Yes |
-| `FIREBASE_PROJECT_ID` | Firebase project ID | Yes |
-| `FIREBASE_STORAGE_BUCKET` | Firebase storage bucket name | Yes |
+- **`deploy.sh`** - Linux/Mac deployment script
+- **`deploy.bat`** - Windows deployment script
+- **`setup-firebase.js`** - Firebase configuration helper
 
-## API Endpoints
+## 🔒 Security
 
-- `GET /api/photos` - Get all photos
-- `POST /api/photos/upload` - Upload a new photo
-- `POST /api/photos` - Create a photo with existing URL
-- `GET /api/photos/[id]` - Get a specific photo
+- Firebase service account files are **never committed** to the repository
+- All sensitive configuration uses environment variables
+- `.gitignore` prevents accidental commits of sensitive files
 
-## Contributing
+## 📚 Documentation
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
+- [Firebase Setup Guide](./FIREBASE_SETUP.md)
+- [Render Deployment Guide](./RENDER_DEPLOYMENT.md)
 
-## License
+## 🛠️ Technologies
+
+- **Frontend**: React, TypeScript, Tailwind CSS, Vite
+- **Backend**: Express.js, Node.js
+- **Database**: Firebase Firestore, Neon PostgreSQL (optional)
+- **Storage**: Firebase Storage
+- **Deployment**: Render, Vercel
+
+## 📝 License
 
 MIT License
