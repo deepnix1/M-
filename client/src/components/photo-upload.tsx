@@ -44,8 +44,8 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Yükleme başarısız');
+        const errorData = await response.json().catch(() => ({ message: 'Upload failed' }));
+        throw new Error(errorData.message || 'Yükleme başarısız');
       }
 
       await response.json();

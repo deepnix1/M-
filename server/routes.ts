@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertPhotoSchema } from "@shared/schema";
@@ -11,7 +11,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
-      fileSize: 10 * 1024 * 1024, // 10MB limit
+      fileSize: 50 * 1024 * 1024, // 50MB limit
     },
     fileFilter: (req, file, cb) => {
       if (file.mimetype.startsWith('image/')) {
@@ -21,6 +21,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     },
   });
+
+  // Multer error handler middleware
+  const handleMulterError = (error: any, req: Request, res: Response, next: NextFunction) => {
+    if (error instanceof multer.MulterError) {
+      if (error.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).json({ message: "File too large. Maximum size is 50MB." });
+      }
+      return res.status(400).json({ message: `Upload error: ${error.message}` });
+    }
+    next(error);
+  };
 
   // Get all photos
   app.get("/api/photos", async (req, res) => {
@@ -33,7 +44,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Upload photo with file
-  app.post("/api/photos/upload", upload.single('image'), async (req, res) => {
+  app.post("/api/photos/upload", handleMulterError, upload.single('image'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No image file provided" });
@@ -44,16 +55,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const photoData = {
         filename,
-        imageUrl,
+        imageData: imageUrl, // Use imageUrl as imageData
+        guestName: req.body.guestName || 'Anonymous', // Default guest name
         description: req.body.description || null,
-        uploadedAt: new Date(),
       };
 
       const photo = await storage.createPhoto(photoData);
       res.status(201).json(photo);
     } catch (error) {
       console.error('Upload error:', error);
-      res.status(500).json({ message: "Failed to upload photo" });
+      // Handle specific error types
+      if (error instanceof Error) {
+        if (error.message.includes('File too large')) {
+          res.status(413).json({ message: "File too large. Maximum size is 50MB." });
+        } else {
+          res.status(500).json({ message: error.message || "Failed to upload photo" });
+        }
+      } else {
+        res.status(500).json({ message: "Failed to upload photo" });
+      }
     }
   });
 
