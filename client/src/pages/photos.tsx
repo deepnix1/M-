@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Loader2 } from "lucide-react";
@@ -24,12 +22,10 @@ export default function Photos() {
   const { data: photos, isLoading, refetch } = useQuery({
     queryKey: ["photos"],
     queryFn: async () => {
-      const photosQuery = query(collection(db, "photos"), orderBy("uploadedAt", "desc"));
-      const snapshot = await getDocs(photosQuery);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Photo[];
+      const res = await fetch('/api/photos');
+      if (!res.ok) throw new Error('Fotoğraflar alınamadı');
+      const data = await res.json();
+      return data as Photo[];
     },
   });
 
@@ -96,10 +92,12 @@ export default function Photos() {
                       </p>
                     )}
                     <p className="text-xs mt-1 text-gray-300">
-                      {photo.uploadedAt?.toDate?.() ? 
-                        photo.uploadedAt.toDate().toLocaleDateString('tr-TR') : 
-                        'Yeni yüklendi'
-                      }
+                      {(() => {
+                        try {
+                          const date = new Date(photo.uploadedAt as any);
+                          return isNaN(date.getTime()) ? 'Yeni yüklendi' : date.toLocaleDateString('tr-TR');
+                        } catch { return 'Yeni yüklendi'; }
+                      })()}
                     </p>
                   </div>
                 </div>
