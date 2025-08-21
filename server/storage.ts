@@ -4,6 +4,8 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 import { eq, desc } from "drizzle-orm";
 import { FirebaseStorage } from "./firebase-storage";
+import fs from "fs";
+import path from "path";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -104,4 +106,17 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = process.env.FIREBASE_CONFIG ? new FirebaseStorage() : new MemStorage();
+// Choose Firebase storage when credentials or relevant envs are available, otherwise use in-memory
+const localServiceAccountPath = path.join(process.cwd(), 'mihribancagatay-d5d82-firebase-adminsdk-fbsvc-8b3ecbc9dd.json');
+const hasLocalServiceAccount = fs.existsSync(localServiceAccountPath);
+const hasGoogleCredFile = process.env.GOOGLE_APPLICATION_CREDENTIALS ? fs.existsSync(process.env.GOOGLE_APPLICATION_CREDENTIALS) : false;
+
+const shouldUseFirebase = Boolean(
+  process.env.FIREBASE_SERVICE_ACCOUNT ||
+  process.env.FIREBASE_STORAGE_BUCKET ||
+  process.env.FIREBASE_PROJECT_ID ||
+  hasGoogleCredFile ||
+  hasLocalServiceAccount
+);
+
+export const storage = shouldUseFirebase ? new FirebaseStorage() : new MemStorage();

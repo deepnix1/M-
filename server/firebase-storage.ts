@@ -11,21 +11,27 @@ try {
   // Try to read from environment variable first
   if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    const projectId = serviceAccount.project_id || process.env.FIREBASE_PROJECT_ID;
+    const bucketName = process.env.FIREBASE_STORAGE_BUCKET || (projectId ? `${projectId}.appspot.com` : undefined);
+
     app = initializeApp({
       credential: cert(serviceAccount),
-      storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "mihribancagatay-d5d82.firebasestorage.app"
+      ...(bucketName ? { storageBucket: bucketName } : {}),
     });
   } else {
-    // Try to read from JSON file
+    // Try to read from JSON file (useful for local development)
     const fs = await import('fs');
     const path = await import('path');
     const serviceAccountPath = path.join(process.cwd(), 'mihribancagatay-d5d82-firebase-adminsdk-fbsvc-8b3ecbc9dd.json');
     
     if (fs.existsSync(serviceAccountPath)) {
       const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
+      const projectId = serviceAccount.project_id;
+      const bucketName = process.env.FIREBASE_STORAGE_BUCKET || (projectId ? `${projectId}.appspot.com` : 'mihribancagatay-d5d82.appspot.com');
+
       app = initializeApp({
         credential: cert(serviceAccount),
-        storageBucket: "mihribancagatay-d5d82.firebasestorage.app"
+        storageBucket: bucketName,
       });
       console.log("Firebase initialized from JSON file");
     } else {

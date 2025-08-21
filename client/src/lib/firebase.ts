@@ -7,7 +7,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAlBLcon5dC-FxJKIWoZmZh7YQYmGNBuAE",
   authDomain: "mihribancagatay-d5d82.firebaseapp.com",
   projectId: "mihribancagatay-d5d82",
-  storageBucket: "mihribancagatay-d5d82.firebasestorage.app",
+  storageBucket: "mihribancagatay-d5d82.appspot.com",
   messagingSenderId: "265751622576",
   appId: "1:265751622576:web:e0dd66c17be725d6b1dc75",
   measurementId: "G-Y2YQL01NQP"
