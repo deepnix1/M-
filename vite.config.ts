@@ -1,12 +1,18 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+// Only import the runtime error overlay in development to avoid prod issues
+const isDev = process.env.NODE_ENV !== "production";
+let runtimeErrorOverlay: any = undefined;
+if (isDev) {
+  // dynamic require to avoid ESM import resolution during build on prod
+  runtimeErrorOverlay = (await import("@replit/vite-plugin-runtime-error-modal")).default;
+}
 
 export default defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
+    ...(isDev && runtimeErrorOverlay ? [runtimeErrorOverlay()] : []),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
