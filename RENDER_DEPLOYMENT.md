@@ -47,7 +47,7 @@ FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
 
 **Build & Deploy Settings:**
 - **Build Command**: `npm install && npm run build`
-- **Start Command**: `npm start`
+- **Start Command**: `npx tsx server/index.ts`
 - **Plan**: `Free` (or choose paid plan)
 
 ### 2.3 Environment Variables
