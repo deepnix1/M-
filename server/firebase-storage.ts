@@ -68,6 +68,7 @@ export class FirebaseStorage {
       ...insertPhoto,
       id,
       description: insertPhoto.description || null,
+      mediaType: (insertPhoto as any).mediaType || 'image',
       uploadedAt: new Date(),
     };
 

@@ -55,6 +55,7 @@ export class MemStorage implements IStorage {
       ...insertPhoto,
       id,
       description: insertPhoto.description || null,
+      mediaType: (insertPhoto as any).mediaType || 'image',
       uploadedAt: new Date(),
     };
     this.photos.set(id, photo);

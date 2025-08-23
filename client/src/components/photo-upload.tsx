@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Upload, Image, Loader2 } from 'lucide-react';
+import { Upload, Image, Video, Loader2 } from 'lucide-react';
 
 interface PhotoUploadProps {
   onPhotoUploaded?: () => void;
@@ -17,10 +17,10 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    if (selectedFile && selectedFile.type.startsWith('image/')) {
+    if (selectedFile && (selectedFile.type.startsWith('image/') || selectedFile.type.startsWith('video/'))) {
       setFile(selectedFile);
     } else {
-      alert('Lütfen geçerli bir resim dosyası seçin.');
+      alert('Lütfen geçerli bir resim veya video dosyası seçin.');
     }
   };
 
@@ -35,10 +35,11 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
 
     try {
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append('media', file);
+      formData.append('mediaType', file.type.startsWith('image/') ? 'image' : 'video');
       if (description) formData.append('description', description);
 
-      const response = await fetch('/api/photos/upload', {
+      const response = await fetch('/api/media/upload', {
         method: 'POST',
         body: formData,
       });
@@ -58,10 +59,10 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
         onPhotoUploaded();
       }
 
-      alert('Fotoğraf başarıyla yüklendi!');
+      alert('Medya başarıyla yüklendi!');
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Fotoğraf yüklenirken bir hata oluştu.');
+      alert('Medya yüklenirken bir hata oluştu.');
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
@@ -72,17 +73,17 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Image className="w-5 h-5" />
-          Fotoğraf Yükle
+          <Upload className="w-5 h-5" />
+          Medya Yükle
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="photo">Fotoğraf Seçin</Label>
+          <Label htmlFor="media">Fotoğraf veya Video Seçin</Label>
           <Input
-            id="photo"
+            id="media"
             type="file"
-            accept="image/*"
+            accept="image/*,video/*"
             onChange={handleFileChange}
             disabled={isUploading}
           />
@@ -93,7 +94,7 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
           <Input
             id="description"
             type="text"
-            placeholder="Fotoğraf açıklaması..."
+            placeholder="Medya açıklaması..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             disabled={isUploading}
@@ -133,7 +134,7 @@ export default function PhotoUpload({ onPhotoUploaded }: PhotoUploadProps) {
           ) : (
             <>
               <Upload className="w-4 h-4 mr-2" />
-              Fotoğraf Yükle
+              Medya Yükle
             </>
           )}
         </Button>

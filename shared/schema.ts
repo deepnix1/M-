@@ -13,6 +13,7 @@ export const photos = pgTable("photos", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   filename: text("filename").notNull(),
   imageData: text("image_data").notNull(),
+  mediaType: text("media_type").notNull().default("image"), // "image" or "video"
   description: text("description"),
   guestName: text("guest_name").notNull(),
   uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
@@ -26,6 +27,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertPhotoSchema = createInsertSchema(photos).pick({
   filename: true,
   imageData: true,
+  mediaType: true,
   description: true,
   guestName: true,
 });

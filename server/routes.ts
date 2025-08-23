@@ -16,10 +16,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       fileSize: 50 * 1024 * 1024, // 50MB limit
     },
     fileFilter: (req, file, cb) => {
-      if (file.mimetype.startsWith('image/')) {
+      if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
         cb(null, true);
       } else {
-        cb(new Error('Only image files are allowed'));
+        cb(new Error('Only image and video files are allowed'));
       }
     },
   });
@@ -45,36 +45,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Upload photo with file
-  app.post("/api/photos/upload", upload.single('image'), handleMulterError, async (req, res) => {
+  // Upload media (photo or video) with file
+  app.post("/api/media/upload", upload.single('media'), handleMulterError, async (req, res) => {
     try {
       if (!req.file) {
-        return res.status(400).json({ message: "No image file provided" });
+        return res.status(400).json({ message: "No media file provided" });
       }
 
-      const filename = `${randomUUID()}.jpg`;
-      const imageUrl = await (storage as any).uploadImage(req.file.buffer, filename);
+      const mediaType = req.body.mediaType || 'image';
+      const extension = req.file.mimetype.startsWith('image/') ? 'jpg' : 'mp4';
+      const filename = `${randomUUID()}.${extension}`;
       
-      const photoData = {
+      const mediaUrl = await (storage as any).uploadImage(req.file.buffer, filename);
+      
+      const mediaData = {
         filename,
-        imageData: imageUrl, // Use imageUrl as imageData
-        guestName: req.body.guestName || 'Anonymous', // Default guest name
+        imageData: mediaUrl, // Use mediaUrl as imageData (keeping same field name for compatibility)
+        mediaType,
+        guestName: req.body.guestName || 'Anonymous',
         description: req.body.description || null,
       };
 
-      const photo = await storage.createPhoto(photoData);
-      res.status(201).json(photo);
+      const media = await storage.createPhoto(mediaData);
+      res.status(201).json(media);
     } catch (error) {
       console.error('Upload error:', error);
-      // Handle specific error types
       if (error instanceof Error) {
         if (error.message.includes('File too large')) {
           res.status(413).json({ message: "File too large. Maximum size is 50MB." });
         } else {
-          res.status(500).json({ message: error.message || "Failed to upload photo" });
+          res.status(500).json({ message: error.message || "Failed to upload media" });
         }
       } else {
-        res.status(500).json({ message: "Failed to upload photo" });
+        res.status(500).json({ message: "Failed to upload media" });
       }
     }
   });

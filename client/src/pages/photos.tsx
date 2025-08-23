@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, Loader2, Download, X } from "lucide-react";
+import { Upload, Loader2, Download, X, Play } from "lucide-react";
 import PhotoUpload from "@/components/photo-upload";
 import {
   Dialog,
@@ -15,6 +15,7 @@ interface Photo {
   id: string;
   filename: string;
   imageUrl: string;
+  mediaType?: string;
   description?: string;
   uploadedAt: any;
   size?: number;
@@ -147,13 +148,28 @@ export default function Photos() {
                 onTouchEnd={() => handleTouchEnd(photo)}
                 data-testid={`photo-${photo.id}`}
               >
-                {/* Actual photo */}
-                <img 
-                  src={(photo as any).imageUrl || (photo as any).imageData} 
-                  alt={photo.description || `Yüklenen fotoğraf`}
-                  className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-                  loading="lazy"
-                />
+                {/* Actual media */}
+                {(photo as any).mediaType === 'video' ? (
+                  <div className="relative w-full h-full">
+                    <video 
+                      src={(photo as any).imageUrl || (photo as any).imageData}
+                      className="w-full h-full object-cover"
+                      muted
+                      loop
+                      preload="metadata"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
+                      <Play className="h-8 w-8 text-white drop-shadow-lg" />
+                    </div>
+                  </div>
+                ) : (
+                  <img 
+                    src={(photo as any).imageUrl || (photo as any).imageData} 
+                    alt={photo.description || `Yüklenen fotoğraf`}
+                    className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                )}
                 
                 {/* Hover overlay with actions */}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -227,12 +243,22 @@ export default function Photos() {
 
             {selectedPhoto && (
               <div className="relative w-full h-full flex items-center justify-center">
-                <img
-                  src={(selectedPhoto as any).imageUrl || (selectedPhoto as any).imageData}
-                  alt={selectedPhoto.description || 'Fotoğraf'}
-                  className="max-w-full max-h-[90vh] object-contain"
-                  data-testid="preview-image"
-                />
+                {(selectedPhoto as any).mediaType === 'video' ? (
+                  <video
+                    src={(selectedPhoto as any).imageUrl || (selectedPhoto as any).imageData}
+                    className="max-w-full max-h-[90vh] object-contain"
+                    controls
+                    autoPlay
+                    data-testid="preview-video"
+                  />
+                ) : (
+                  <img
+                    src={(selectedPhoto as any).imageUrl || (selectedPhoto as any).imageData}
+                    alt={selectedPhoto.description || 'Fotoğraf'}
+                    className="max-w-full max-h-[90vh] object-contain"
+                    data-testid="preview-image"
+                  />
+                )}
                 
                 {/* Photo info */}
                 <div className="absolute bottom-4 left-4 right-4 bg-black/50 text-white p-3 rounded">
