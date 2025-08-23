@@ -67,28 +67,41 @@ export default function Photos() {
   const downloadPhoto = async (photo: Photo) => {
     try {
       const imageUrl = (photo as any).imageUrl || (photo as any).imageData;
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
       
-      const url = window.URL.createObjectURL(blob);
+      // Try direct download first
       const link = document.createElement('a');
-      link.href = url;
+      link.href = imageUrl;
       link.download = photo.filename || `photo_${photo.id}.jpg`;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      
+      // Add to DOM, click, and remove
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
       
       toast({
         title: "İndirildi!",
         description: "Fotoğraf başarıyla indirildi.",
       });
     } catch (error) {
-      toast({
-        title: "Hata!",
-        description: "Fotoğraf indirilemedi.",
-        variant: "destructive",
-      });
+      console.error('Download error:', error);
+      
+      // Fallback: open in new tab if direct download fails
+      try {
+        const imageUrl = (photo as any).imageUrl || (photo as any).imageData;
+        window.open(imageUrl, '_blank');
+        toast({
+          title: "Yeni sekmede açıldı",
+          description: "Fotoğrafı sağ tıklayıp 'Resmi farklı kaydet' seçeneğini kullanın.",
+        });
+      } catch (fallbackError) {
+        toast({
+          title: "Hata!",
+          description: "Fotoğraf indirilemedi. Lütfen tekrar deneyin.",
+          variant: "destructive",
+        });
+      }
     }
   };
 

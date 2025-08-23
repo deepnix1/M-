@@ -7,6 +7,8 @@ import multer from "multer";
 import { randomUUID } from "crypto";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  console.log('Registering routes...');
+  
   // Configure multer for file uploads
   const upload = multer({
     storage: multer.memoryStorage(),
@@ -44,7 +46,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Upload photo with file
-  app.post("/api/photos/upload", handleMulterError, upload.single('image'), async (req, res) => {
+  app.post("/api/photos/upload", upload.single('image'), handleMulterError, async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No image file provided" });
@@ -103,6 +105,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(photo);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch photo" });
+    }
+  });
+
+  // Download photo endpoint
+  app.get("/api/photos/:id/download", async (req, res) => {
+    try {
+      const photo = await storage.getPhoto(req.params.id);
+      if (!photo) {
+        res.status(404).json({ message: "Photo not found" });
+        return;
+      }
+
+      const imageUrl = (photo as any).imageUrl || (photo as any).imageData;
+      if (!imageUrl) {
+        res.status(404).json({ message: "Photo URL not found" });
+        return;
+      }
+
+      // Fetch the image from Firebase Storage
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.statusText}`);
+      }
+
+      const imageBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(imageBuffer);
+
+      // Set appropriate headers for download
+      res.set({
+        'Content-Type': 'image/jpeg',
+        'Content-Disposition': `attachment; filename="${photo.filename || 'photo.jpg'}"`,
+        'Content-Length': buffer.length.toString(),
+      });
+
+      res.send(buffer);
+    } catch (error) {
+      console.error('Download error:', error);
+      res.status(500).json({ message: "Failed to download photo" });
     }
   });
 
