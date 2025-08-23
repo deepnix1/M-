@@ -137,11 +137,11 @@ export default function Photos() {
             <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
           </div>
         ) : photos && photos.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
             {photos.map((photo) => (
               <div
                 key={photo.id}
-                className="aspect-square bg-gray-100 relative group cursor-pointer overflow-hidden rounded-sm"
+                className="aspect-square bg-gray-100 relative group cursor-pointer overflow-hidden"
                 onClick={() => handlePhotoClick(photo)}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={() => handleTouchEnd(photo)}
